@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="card col-md-6 offset-3 mt-3">
+    <div class="card-header">New customer</div>
+    <div class="card-body">
+      <form [formGroup]="newCustomerFormGroup" (ngSubmit)="onAddCustomer()">
+        <div class="mb-2">
+          <label>Name :</label>
+          <input class="form-control" formControlName="name" type="text">
+          <ng-container *ngIf="newCustomerFormGroup.controls['name'].touched
+            && newCustomerFormGroup.controls['name'].errors">
+            <!--<span class="text-danger" *ngIf="newCustomerFormGroup.controls['name'].errors['required']">
+              Name is required.
+            </span>-->
+            <span class="text-danger" *ngIf="newCustomerFormGroup.controls['name'].errors['minLength']">
+              The name must contain minimum 5 characters.
+            </span>
+          </ng-container>
+        </div>
+        <div class="mb-2">
+          <label>Email :</label>
+          <input class="form-control" formControlName="email" type="email">
+          <ng-container *ngIf="newCustomerFormGroup.controls['email'].touched
+            && newCustomerFormGroup.controls['email'].errors">
+            <span class="text-danger" *ngIf="newCustomerFormGroup.controls['email'].errors['required']">
+              Name is required.
+            </span>
+            <span class="text-danger" *ngIf="newCustomerFormGroup.controls['email'].errors['email']">
+              Email is not valid.
+            </span>
+          </ng-container>
+        </div>
+        <button [disabled]="!newCustomerFormGroup.valid" class="btn btn-primary" type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Accounts</div>
+        <div class="card-body">
+          <form [formGroup]="searchAccountFormGroup">
+            <div class="input-group">
+              <label class="input-group-text">Account Id</label>
+              <input class="form-control" formControlName="accountId" (change)="handleSearchAccount()">
+            </div>
+          </form>
+          <ng-container *ngIf="accountHistory$ | async as accountHistory ; else errorTemplate">
+            <ul class="list-group mt-3 mb-3">
+              <li class="list-group-item">
+                <label>Account ID :</label>
+                <label><strong>{{accountHistory.id}}</strong></label>
+              </li>
+              <li class="list-group-item">
+                <label>Balance :</label>
+                <label><strong>{{accountHistory.balance | number : '1.0-2'}}</strong></label>
+              </li>
+            </ul>
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let operation of accountHistory.operations">
+                <td>{{operation.operationDate | date : "mm-dd-yyyy"}}</td>
+                <td>{{operation.amount | number : "1.0-2"}}</td>
+                <td>{{operation.type}}</td>
+                <td>{{operation.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+            <ul class="nav nav-pills">
+              <li *ngFor="let p of [].constructor(accountHistory.totalPages);let index=index">
+                <a [ngClass]="index==accountHistory.currentPage?'btn btn-primary':'btn'"
+                   (click)="handleChangePage(index)">
+                  {{index + 1}}
+                </a>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #errorTemplate>
+            <ng-container *ngIf="errorMessage">
+              <div class="alert alert-danger mt-3">{{errorMessage}}</div>
+            </ng-container>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card" *ngIf="accountHistory$">
+        <div class="card-header">Operations</div>
+        <div class="card-body">
+          <form [formGroup]="operationFormGroup">
+            <div class="form-check form-check-inline">
+              <label for="debit" class="form-check-label" for="debit">DEBIT :</label>
+              <input type="radio" class="form-check-input" formControlName="operationType" value="debit" id="debit">
+            </div>
+            <div class="form-check form-check-inline">
+              <label for="credit" class="form-check-label" for="credit">CREDIT :</label>
+              <input type="radio" class="form-check-input" formControlName="operationType" value="credit" id="credit">
+            </div>
+            <div class="form-check form-check-inline">
+              <label for="transfer" class="form-check-label" for="transfer">TRANSFER :</label>
+              <input type="radio" class="form-check-input" formControlName="operationType" value="transfer" id="transfer">
+            </div>
+            <ng-container *ngIf="operationFormGroup.value.operationType == 'transfer'">
+              <div class="mb-3 input-group">
+                <label class="input-group-text">Account Destination :</label>
+                <input class="form-control" formControlName="accountDestination" type="text">
+              </div>
+            </ng-container>
+            <div class="mb-3 input-group">
+              <label class="input-group-text">Amount :</label>
+              <input class="form-control" formControlName="amount" type="number">
+            </div>
+            <div class="mb-3 input-group">
+              <label class="input-group-text">Description :</label>
+              <textarea class="form-control" formControlName="description"></textarea>
+            </div>
+            <div class="d-grid">
+              <button (click)="handleAccountOperation()" class="btn btn-primary">Valid</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
