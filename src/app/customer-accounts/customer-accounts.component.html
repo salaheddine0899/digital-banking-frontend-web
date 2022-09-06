@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="card" *ngIf="customerAccounts$ | async as customerAccounts">
+    <div class="card-header">Customer Accounts</div>
+    <div class="card-body">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <strong>Name :</strong>{{customerAccounts.customer.name}}
+        </li>
+        <li class="list-group-item">
+          <strong>Email :</strong>{{customerAccounts.customer.email}}
+        </li>
+      </ul>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th><th>Created At</th><th>Balance</th><th>Status</th><th>Type</th><th>Overdraft</th>
+            <th>Interest Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let account of customerAccounts.accounts">
+            <td>{{account.id}}</td>
+            <td>{{account.createdAt | date : "MM/dd/yyyy"}}</td>
+            <td>{{account.balance}}</td>
+            <td>{{account.status}}</td>
+            <td>{{account.type}}</td>
+            <td>{{account.overDraft}}</td>
+            <td>{{account.interestRate}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="nav nav-pills">
+        <li *ngFor="let p of [].constructor(totalPages);let i=index;">
+          <a class="btn" [ngClass]="currentPage==i?'btn-primary':''"
+           (click)="handleGoToPage(i)">
+            {{i+1}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
